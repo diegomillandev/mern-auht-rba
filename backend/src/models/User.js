@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { hashValue } from '../utils/bycript.js';
 
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true },
