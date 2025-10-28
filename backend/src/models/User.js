@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { hashValue } from '../utils/bycript.js';
+import { hashPassword } from '../utils/bycript.js';
 
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true },
@@ -12,7 +12,7 @@ userSchema.pre('save', async function (next) {
     if (!this.isModified("password")) {
         return next();
     }
-    this.password = await hashValue(this.password);
+    this.password = await hashPassword(this.password);
     return next();
 });
 
