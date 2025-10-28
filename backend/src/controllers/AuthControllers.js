@@ -2,6 +2,7 @@ import catchErrors from "../utils/catchErrors.js";
 import { registerSchema, loginSchema } from "../schemas/auth.js";
 import { formatZodError } from "../utils/helpers.js";
 import { comparePassword } from '../utils/bycript.js';
+import { signToken, refreshToken } from "../utils/jwt.js";
 import User from "../models/User.js";
 
 export class AuthController {
@@ -51,6 +52,9 @@ export class AuthController {
         if (!isPasswordValid) {
             return res.status(400).json({ errors: { email: "Invalid password" } });
         }
+
+        const accessToken = signToken(user._id, user.role);
+        const refreshToken = refreshToken(user._id, user.role);
 
         res.status(200).json({ message: "Login successful" });
     });
