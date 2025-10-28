@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const hashValue = async (value, saltRounds) => bcrypt.hash(value, saltRounds || 10);
 export const compareValue = async (valuel, hashedValue) =>
