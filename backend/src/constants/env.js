@@ -9,3 +9,4 @@ const getEnv = (key, defaultValue = undefined) => {
 }
 
 export const PORT = getEnv('PORT', 3000);
+export const MONGO_URI = getEnv('MONGO_URI');
