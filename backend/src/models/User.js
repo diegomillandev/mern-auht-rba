@@ -7,9 +7,12 @@ const userSchema = new mongoose.Schema({
     role: { type: String, enum: ['user', 'admin'], default: 'user' }
 }, { timestamps: true });
 
-userSchema.beforeSave(function (next) {
-    // Hash password before saving (implementation not shown)
-    next();
+userSchema.pre('save', async function (next) {
+    if (!this.isModified("password")) {
+        return next();
+    }
+    this.password = await hashValue(this.password);
+    return next();
 });
 
 
