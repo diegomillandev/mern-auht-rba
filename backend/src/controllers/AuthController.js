@@ -76,7 +76,9 @@ export class AuthController {
 
         try {
             const decoded = jwt.verify(token, JWT_REFRESH_SECRET);
-            const user = await User.findById(decoded.userId);
+
+            const user = await User.findById(decoded.id);
+
 
             if (!user) {
                 return res.status(401).json({ message: "User not found" });
