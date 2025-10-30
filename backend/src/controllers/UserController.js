@@ -13,7 +13,7 @@ export class UserController {
         res.status(200).json({
             users,
             total,
-            totalPages: Math.ceil(totalUsers / limit),
+            totalPages: Math.ceil(total / limit),
             currentPage: page
         });
     });
