@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { passwordSchema } from "../utils/validations.js";
+import mongoose from "mongoose";
 
 export const registerSchema = z.object({
     username: z.string().min(1, { message: "Name is required" }),
@@ -14,4 +15,10 @@ export const registerSchema = z.object({
 export const loginSchema = z.object({
     email: z.email({ message: "Please enter a valid email" }),
     password: z.string().min(1, { message: "Password is required" }),
+});
+
+export const deleteUserSchema = z.object({
+    id: z.string().refine((val) => mongoose.Types.ObjectId.isValid(val), {
+        message: "Invalid MongoDB ObjectId",
+    })
 });

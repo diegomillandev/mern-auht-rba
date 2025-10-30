@@ -1,5 +1,7 @@
 import User from "../models/User.js";
+import { deleteUserSchema } from "../schemas/auth.js";
 import catchErrors from "../utils/catchErrors.js";
+import { formatZodError } from "../utils/helpers.js";
 
 export class UserController {
     static getUsers = catchErrors(async (req, res) => {
@@ -19,6 +21,19 @@ export class UserController {
     });
 
     static deleteUser = catchErrors(async (req, res) => {
-        const userId = req.params.id;
+
+        const result = deleteUserSchema.safeParse({ id: req.params.id });
+        if (!result.success) {
+            return res.status(400).json({ errors: formatZodError(result.error) });
+        }
+
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        await user.deleteOne();
+
+        res.status(200).json({ message: "User deleted successfully" });
     });
 }
