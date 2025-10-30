@@ -4,8 +4,9 @@ import { verifyToken, authorizeRoles } from '../../middleware/authMiddleware.js'
 
 const router = Router();
 
-router.get('/', verifyToken, authorizeRoles('admin'), UserController.getUsers);
-router.get('/me', verifyToken, UserController.getProfile);
-router.delete('/:id', verifyToken, authorizeRoles('admin'), UserController.deleteUser);
+router.use(verifyToken);
+router.get('/', authorizeRoles('admin'), UserController.getUsers);
+router.delete('/:id', authorizeRoles('admin'), UserController.deleteUser);
+router.get('/me', authorizeRoles('admin', 'user'), UserController.getProfile);
 
 export default router;
