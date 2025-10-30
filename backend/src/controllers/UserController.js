@@ -38,7 +38,6 @@ export class UserController {
     });
 
     static getProfile = catchErrors(async (req, res) => {
-        console.log(req.user);
         const user = await User.findById(req.user.id).select('-password -__v');
         if (!user) {
             return res.status(404).json({ message: "User not found" });
