@@ -17,8 +17,8 @@ export const loginSchema = z.object({
     password: z.string().min(1, { message: "Password is required" }),
 });
 
-export const deleteUserSchema = z.object({
+export const objectIdSchema = z.object({
     id: z.string().refine((val) => mongoose.Types.ObjectId.isValid(val), {
         message: "Invalid MongoDB ObjectId",
-    })
+    }),
 });
