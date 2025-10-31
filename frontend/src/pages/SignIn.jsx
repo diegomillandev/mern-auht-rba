@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { LoadingButton } from "../components/loading-button";
 
 export const SignIn = () => {
   return (
@@ -24,13 +25,7 @@ export const SignIn = () => {
             placeholder="Enter your password"
             required
           />
-
-          <button
-            type="submit"
-            className="w-full bg-indigo-500 py-2.5 rounded text-white mt-2"
-          >
-            Log in
-          </button>
+          <LoadingButton>Sign In</LoadingButton>
         </form>
 
         <p className="text-center">
