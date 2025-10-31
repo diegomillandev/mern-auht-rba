@@ -1,10 +1,17 @@
 import axios from 'axios';
 
-const api = axios.create({
+const options = {
     baseURL: import.meta.env.VITE_API_BASE_URL,
-});
+    withCredentials: true,
+}
 
-api.interceptors.request.use((config) => {
+const API = axios.create(options);
+
+const TokenRefreshClient = axios.create(options);
+TokenRefreshClient.interceptors.response.use((response) => response.data);
+
+
+API.interceptors.response.use((config) => {
     const token = localStorage.getItem('AUTH_TOKEN');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -14,4 +21,4 @@ api.interceptors.request.use((config) => {
     return Promise.reject(error);
 });
 
-export default api;
+export default API;
