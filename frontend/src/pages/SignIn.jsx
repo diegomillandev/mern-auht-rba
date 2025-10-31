@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LoadingButton } from "../components/loading-button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import api from "../config/axios";
 
 const schemaSignIn = z.object({
   email: z.email({ mesage: "Invalid email address" }),
@@ -12,6 +13,8 @@ const schemaSignIn = z.object({
 });
 
 export const SignIn = () => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -30,9 +33,18 @@ export const SignIn = () => {
     }
   }, [errors]);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (formData) => {
+    setLoading(true);
     try {
-    } catch (error) {}
+      const { data } = await api.post("/auth/login", formData);
+      localStorage.setItem("AUTH_TOKEN", data.accessToken);
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+      navigate("/");
+    }
   };
 
   return (
@@ -73,7 +85,7 @@ export const SignIn = () => {
             {...register("password")}
           />
 
-          <LoadingButton>Sign In</LoadingButton>
+          <LoadingButton loading={loading}>Sign In</LoadingButton>
         </form>
 
         <p className="text-center">

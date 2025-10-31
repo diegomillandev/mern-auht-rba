@@ -64,7 +64,7 @@ export class AuthController {
             sameSite: 'strict',
         });
 
-        res.status(200).json({ accessToken });
+        res.status(200).json({ accessToken, message: "Logged in successfully" });
     });
 
     static refreshToken = catchErrors(async (req, res) => {

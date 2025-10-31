@@ -6,17 +6,16 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { useEffect, useState } from "react";
 import api from "../config/axios";
+import { passwordSchema } from "../utils/validation";
 
 const schemaSignUp = z
   .object({
     username: z.string().min(1, { message: "Name is required" }),
     email: z.email({ mesage: "Invalid email address" }),
-    password: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters" }),
+    password: passwordSchema,
     password_confirmation: z
       .string()
-      .min(6, { message: "Password confirmation is required" }),
+      .min(1, { message: "Password confirmation is required" }),
   })
   .refine((data) => data.password === data.password_confirmation, {
     message: "Passwords do not match",
@@ -52,15 +51,14 @@ export const SignUp = () => {
     try {
       const { data } = await api.post("/auth/register", formData);
       toast.success(data.message);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
       setLoading(false);
       reset();
       setTimeout(() => {
         navigate("/sign-in");
       }, 1500);
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Something went wrong");
-    } finally {
-      setLoading(false);
     }
   };
 
