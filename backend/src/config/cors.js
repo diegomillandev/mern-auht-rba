@@ -14,5 +14,6 @@ export const corsConfig = {
             callback(new Error(colors.red("Not allowed by CORS")));
         }
 
-    }
+    },
+    credentials: true,
 }

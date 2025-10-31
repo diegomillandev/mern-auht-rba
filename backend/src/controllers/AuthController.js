@@ -79,7 +79,6 @@ export class AuthController {
 
             const user = await User.findById(decoded.id);
 
-
             if (!user) {
                 return res.status(401).json({ message: "User not found" });
             }

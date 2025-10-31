@@ -1,5 +1,13 @@
-import { LayoutDashboard, Settings, UserRoundCog, Users } from "lucide-react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import {
+  LayoutDashboard,
+  LoaderCircle,
+  Settings,
+  UserRoundCog,
+  Users,
+} from "lucide-react";
+import { Navigate, NavLink, Outlet, useLocation } from "react-router-dom";
+import { getProfile } from "../lib/api";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -7,6 +15,24 @@ function classNames(...classes) {
 
 export const AppLayout = () => {
   const location = useLocation();
+
+  const { isLoading, error } = useQuery({
+    queryFn: getProfile,
+    queryKey: ["profile"],
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-white">
+        <LoaderCircle className="animate-spin text-blue-500" size={36} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <Navigate to="/sign-in" state={{ from: location }} replace />;
+  }
+
   return (
     <div className="flex">
       <aside
