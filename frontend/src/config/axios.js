@@ -1,4 +1,6 @@
 import axios from 'axios';
+import queryClient from "./queryClient";
+import { navigate } from '../lib/navigate';
 
 const options = {
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -17,8 +19,23 @@ API.interceptors.response.use((config) => {
         config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
-}, (error) => {
-    return Promise.reject(error);
+}, async (error) => {
+    const { config, response: { status } } = error;
+    const originalRequest = config;
+
+    if (status === 401 && !originalRequest._retry) {
+        try {
+            await TokenRefreshClient.get("/auth/refresh");
+            return TokenRefreshClient(config);
+        } catch (error) {
+            queryClient.clear();
+            navigate("/login", {
+                state: {
+                    redirectUrl: window.location.pathname,
+                },
+            });
+        }
+    }
 });
 
 export default API;
