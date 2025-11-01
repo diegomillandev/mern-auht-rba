@@ -22,3 +22,8 @@ export const objectIdSchema = z.object({
         message: "Invalid MongoDB ObjectId",
     }),
 });
+
+export const updateProfileSchema = z.object({
+    email: z.email({ message: "Please enter a valid email" }).optional(),
+    username: z.string().min(1, { message: "Name is required" }).optional(),
+});

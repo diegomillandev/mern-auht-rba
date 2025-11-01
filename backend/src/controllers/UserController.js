@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import { objectIdSchema } from "../schemas/auth.js";
+import { objectIdSchema, updateProfileSchema } from "../schemas/auth.js";
 import catchErrors from "../utils/catchErrors.js";
 import { formatZodError } from "../utils/helpers.js";
 
@@ -45,4 +45,33 @@ export class UserController {
 
         res.status(200).json({ user });
     })
+
+    static updateProfile = catchErrors(async (req, res) => {
+
+        const result = updateProfileSchema.safeParse(req.body);
+        if (!result.success) {
+            return res.status(400).json({ errors: formatZodError(result.error) });
+        }
+
+        const { email, username } = result.data;
+
+
+        if (req.user.role !== 'admin' && email && email !== req.user.email) {
+            return res.status(403).json({ message: "You are not authorized to change your email" });
+        }
+
+        if (email) {
+            const validatedEmail = await User.findOne({ email });
+            if (validatedEmail && validatedEmail.id !== req.user.id) {
+                return res.status(400).json({ message: "Email is already in use" });
+            }
+        }
+
+        if (username) req.user.username = username;
+        if (email && req.user.role === 'admin') req.user.email = email;
+
+        await req.user.save();
+
+        res.status(200).json({ message: "Profile updated successfully" });
+    });
 }
