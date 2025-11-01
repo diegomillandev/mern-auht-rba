@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Navigate, NavLink, Outlet, useLocation } from "react-router-dom";
 import { getProfile } from "../lib/api";
+import { useEffect, useState } from "react";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -17,7 +18,7 @@ function classNames(...classes) {
 export const AppLayout = () => {
   const location = useLocation();
 
-  const { isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryFn: getProfile,
     queryKey: ["profile"],
   });
@@ -66,19 +67,21 @@ export const AppLayout = () => {
               </NavLink>
             </li>
 
-            <li>
-              <NavLink
-                to="/users"
-                className={({ isActive }) =>
-                  `flex items-center gap-x-3 py-2 px-2.5 text-sm rounded-lg hover:bg-gray-100 focus:outline-none transition-colors ${
-                    isActive ? "bg-gray-100 text-blue-600" : "text-gray-800"
-                  }`
-                }
-              >
-                <Users size={18} />
-                Users
-              </NavLink>
-            </li>
+            {data.user.role === "admin" && (
+              <li>
+                <NavLink
+                  to="/users"
+                  className={({ isActive }) =>
+                    `flex items-center gap-x-3 py-2 px-2.5 text-sm rounded-lg hover:bg-gray-100 focus:outline-none transition-colors ${
+                      isActive ? "bg-gray-100 text-blue-600" : "text-gray-800"
+                    }`
+                  }
+                >
+                  <Users size={18} />
+                  Users
+                </NavLink>
+              </li>
+            )}
 
             <li>
               <NavLink

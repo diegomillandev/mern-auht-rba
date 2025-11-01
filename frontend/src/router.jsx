@@ -8,6 +8,8 @@ import { Profile } from "./pages/Profile";
 import { SettingsLayout } from "./layouts/SettingsLayout";
 import { Password } from "./pages/Password";
 import { Logout } from "./pages/Logout";
+import { Users } from "./pages/Users";
+import { Unauthorized } from "./pages/unauthorized";
 
 function NavigationHandler() {
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ export const Router = () => {
         </Route>
         <Route path={"/"} element={<AppLayout />}>
           <Route index element={<div>Home Page</div>} />
-          <Route path="/users" element={<div>Users Page</div>} />
+          <Route path="/users" element={<Users />} />
           <Route path="/logout" element={<Logout />} />
 
           <Route element={<SettingsLayout />}>
@@ -34,6 +36,7 @@ export const Router = () => {
             <Route path="/settings/password" element={<Password />} />
           </Route>
         </Route>
+        <Route path="*" element={<Unauthorized />} />
       </Routes>
     </BrowserRouter>
   );
