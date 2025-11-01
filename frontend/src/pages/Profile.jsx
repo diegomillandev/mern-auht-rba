@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { updateProfile } from "../lib/api";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const profileSchema = z.object({
   username: z.string().min(2, "Username must be at least 2 characters"),
@@ -34,16 +34,6 @@ export const Profile = () => {
     },
   });
 
-  useEffect(() => {
-    if (user) {
-      reset({
-        username: user.username,
-        email: user.email,
-        role: user.role,
-      });
-    }
-  }, [user, reset]);
-
   const { mutate } = useMutation({
     mutationFn: updateProfile,
     onMutate: () => setIsLoading(true),
@@ -51,11 +41,20 @@ export const Profile = () => {
       toast.error(error.response.data.message || "Failed to update profile.");
       setIsLoading(false);
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       toast.success("Profile updated successfully!");
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      await queryClient.refetchQueries({ queryKey: ["profile"] });
+
+      const updatedData = queryClient.getQueryData(["profile"]);
+      const updatedUser = updatedData?.user;
+      if (updatedUser) {
+        reset({
+          username: updatedUser.username,
+          email: updatedUser.email,
+          role: updatedUser.role,
+        });
+      }
       setIsLoading(false);
-      reset(undefined, { keepDirty: false });
     },
   });
 

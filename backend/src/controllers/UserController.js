@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import { objectIdSchema, updatePasswordSchema, updateProfileSchema } from "../schemas/auth.js";
 import catchErrors from "../utils/catchErrors.js";
 import { formatZodError } from "../utils/helpers.js";
+import { comparePassword } from "../utils/bycript.js";
 
 export class UserController {
     static getUsers = catchErrors(async (req, res) => {
@@ -38,7 +39,9 @@ export class UserController {
     });
 
     static getProfile = catchErrors(async (req, res) => {
-        res.status(200).json({ user: req.user });
+        const { password, __v, ...userData } = req.user.toObject();
+
+        res.status(200).json({ user: userData });
     })
 
     static updateProfile = catchErrors(async (req, res) => {
@@ -77,7 +80,14 @@ export class UserController {
         }
 
         const { currentPassword, newPassword } = result.data;
+        const isMatch = await comparePassword(currentPassword, req.user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Current password is incorrect" });
+        }
 
+        req.user.password = newPassword;
+        await req.user.save();
 
+        res.status(200).json({ message: "Password updated successfully" });
     });
 }
