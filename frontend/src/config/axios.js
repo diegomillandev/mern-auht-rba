@@ -28,14 +28,19 @@ API.interceptors.response.use(
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
-                await TokenRefreshClient.post("/auth/refresh-token", {}, { withCredentials: true });
+                const response = await TokenRefreshClient.post("/auth/refresh-token");
 
-                // Actualiza el token en headers y reintenta la request original
-                const newToken = localStorage.getItem('AUTH_TOKEN');
+                const newToken = response.accessToken;
+
+                if (newToken) {
+                    localStorage.setItem('AUTH_TOKEN', newToken);
+                    originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                }
                 if (newToken) originalRequest.headers.Authorization = `Bearer ${newToken}`;
 
                 return API(originalRequest);
             } catch (err) {
+                localStorage.removeItem('AUTH_TOKEN');
                 queryClient.clear();
                 navigate("/sign-in", {
                     state: { redirectUrl: window.location.pathname },
