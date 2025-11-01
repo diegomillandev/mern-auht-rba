@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   LayoutDashboard,
   LoaderCircle,
+  LogOut,
   Settings,
   UserRoundCog,
   Users,
@@ -91,6 +92,17 @@ export const AppLayout = () => {
               >
                 <Settings size={18} />
                 Settings
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/logout"
+                className={classNames(
+                  "flex items-center gap-x-3 py-2 px-2.5 text-sm rounded-lg hover:bg-gray-100 focus:outline-none transition-colors"
+                )}
+              >
+                <LogOut size={18} />
+                Logout
               </NavLink>
             </li>
           </ul>

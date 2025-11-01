@@ -26,3 +26,12 @@ export const changePassword = async (passwordData) => {
         throw error || new Error("An unknown error occurred while changing the password.");
     }
 }
+
+export const logout = async () => {
+    try {
+        const response = await API.post("/auth/logout");
+        return response.data;
+    } catch (error) {
+        throw error || new Error("An unknown error occurred while logging out.");
+    }
+}

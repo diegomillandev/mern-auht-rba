@@ -7,6 +7,7 @@ import { AppLayout } from "./layouts/AppLayout";
 import { Profile } from "./pages/Profile";
 import { SettingsLayout } from "./layouts/SettingsLayout";
 import { Password } from "./pages/Password";
+import { Logout } from "./pages/Logout";
 
 function NavigationHandler() {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ export const Router = () => {
         <Route path={"/"} element={<AppLayout />}>
           <Route index element={<div>Home Page</div>} />
           <Route path="/users" element={<div>Users Page</div>} />
+          <Route path="/logout" element={<Logout />} />
 
           <Route element={<SettingsLayout />}>
             <Route path="/settings/profile" element={<Profile />} />
