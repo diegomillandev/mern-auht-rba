@@ -27,3 +27,12 @@ export const updateProfileSchema = z.object({
     email: z.email({ message: "Please enter a valid email" }).optional(),
     username: z.string().min(1, { message: "Name is required" }).optional(),
 });
+
+export const updatePasswordSchema = z.object({
+    currentPassword: z.string().min(1, { message: "Current password is required" }),
+    newPassword: passwordSchema,
+    newPasswordConfirmation: z.string().min(1, { message: "Please confirm new password" }),
+}).refine((data) => data.newPassword === data.newPasswordConfirmation, {
+    message: "New passwords do not match",
+    path: ["newPasswordConfirmation"],
+});

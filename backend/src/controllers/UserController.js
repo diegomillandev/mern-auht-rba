@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import { objectIdSchema, updateProfileSchema } from "../schemas/auth.js";
+import { objectIdSchema, updatePasswordSchema, updateProfileSchema } from "../schemas/auth.js";
 import catchErrors from "../utils/catchErrors.js";
 import { formatZodError } from "../utils/helpers.js";
 
@@ -38,12 +38,12 @@ export class UserController {
     });
 
     static getProfile = catchErrors(async (req, res) => {
-        const user = await User.findById(req.user.id).select('-password -__v');
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
+        // const user = await User.findById(req.user.id).select('-password -__v');
+        // if (!user) {
+        //     return res.status(404).json({ message: "User not found" });
+        // }
 
-        res.status(200).json({ user });
+        res.status(200).json({ user: req.user });
     })
 
     static updateProfile = catchErrors(async (req, res) => {
@@ -73,5 +73,16 @@ export class UserController {
         await req.user.save();
 
         res.status(200).json({ message: "Profile updated successfully" });
+    });
+
+    static updatePassword = catchErrors(async (req, res) => {
+        const result = updatePasswordSchema.safeParse(req.body);
+        if (!result.success) {
+            return res.status(400).json({ errors: formatZodError(result.error) });
+        }
+
+        const { currentPassword, newPassword } = result.data;
+
+
     });
 }
