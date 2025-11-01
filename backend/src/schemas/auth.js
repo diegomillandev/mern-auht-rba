@@ -29,10 +29,10 @@ export const updateProfileSchema = z.object({
 });
 
 export const updatePasswordSchema = z.object({
-    currentPassword: z.string().min(1, { message: "Current password is required" }),
-    newPassword: passwordSchema,
-    newPasswordConfirmation: z.string().min(1, { message: "Please confirm new password" }),
-}).refine((data) => data.newPassword === data.newPasswordConfirmation, {
+    current_password: z.string().min(1, { message: "Current password is required" }),
+    new_password: passwordSchema,
+    new_password_confirmation: z.string().min(1, { message: "Please confirm new password" }),
+}).refine((data) => data.new_password === data.new_password_confirmation, {
     message: "New passwords do not match",
-    path: ["newPasswordConfirmation"],
+    path: ["confirm_new_password"],
 });

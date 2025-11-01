@@ -17,3 +17,12 @@ export const updateProfile = async (profileData) => {
         throw error || new Error("An unknown error occurred while updating the profile.");
     }
 }
+
+export const changePassword = async (passwordData) => {
+    try {
+        const response = await API.patch("/users/me", passwordData);
+        return response.data;
+    } catch (error) {
+        throw error || new Error("An unknown error occurred while changing the password.");
+    }
+}

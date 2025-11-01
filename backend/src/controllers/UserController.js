@@ -79,13 +79,13 @@ export class UserController {
             return res.status(400).json({ errors: formatZodError(result.error) });
         }
 
-        const { currentPassword, newPassword } = result.data;
-        const isMatch = await comparePassword(currentPassword, req.user.password);
+        const { current_password, new_password } = result.data;
+        const isMatch = await comparePassword(current_password, req.user.password);
         if (!isMatch) {
             return res.status(400).json({ message: "Current password is incorrect" });
         }
 
-        req.user.password = newPassword;
+        req.user.password = new_password;
         await req.user.save();
 
         res.status(200).json({ message: "Password updated successfully" });
