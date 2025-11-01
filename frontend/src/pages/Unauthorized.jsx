@@ -1,26 +1,26 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const Unauthorized = () => {
   return (
-    <main className="flex grow items-center justify-center px-4 text-center h-screen">
-      <div className="space-y-6">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold">401 - Unauthorized</h1>
-          <p className="text-muted-foreground">
-            You do not have permission to access this page.
-          </p>
-        </div>
-        <div>
-          <button
-            type="button"
-            className="w-40 py-3 active:scale-95 transition text-sm text-white bg-blue-500 cursor-pointer rounded-lg font-medium hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300"
-          >
-            <p className="mb-0.5">
-              <Link to="/">Go back home</Link>
-            </p>
-          </button>
-        </div>
+    <div className="flex flex-col items-center justify-center text-sm h-[400px]">
+      <p className="font-medium text-lg text-indigo-500">404 Error</p>
+
+      <h2 className="md:text-6xl text-4xl font-semibold text-gray-800">
+        Page Not Found
+      </h2>
+
+      <p className="text-base mt-4 text-gray-500">
+        {`Sorry, we couldn’t find the page you’re looking for.`}
+      </p>
+
+      <div className="flex items-center gap-4 mt-6">
+        <button
+          type="button"
+          className="bg-indigo-500 hover:bg-indigo-600 px-7 py-2.5 text-white rounded active:scale-95 transition-all"
+        >
+          <Link to="/">Go back home</Link>
+        </button>
       </div>
-    </main>
+    </div>
   );
 };
