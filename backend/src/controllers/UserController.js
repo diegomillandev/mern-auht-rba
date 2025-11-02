@@ -11,7 +11,7 @@ export class UserController {
         const skip = (page - 1) * limit;
 
         const total = await User.countDocuments();
-        const users = await User.find().skip(skip).limit(limit).select('-password');
+        const users = await User.find().skip(skip).limit(limit).select('-password -__v -updatedAt');
 
         res.status(200).json({
             users,

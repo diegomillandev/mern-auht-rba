@@ -35,3 +35,12 @@ export const logout = async () => {
         throw error || new Error("An unknown error occurred while logging out.");
     }
 }
+
+export const getUsers = async () => {
+    try {
+        const response = await API.get("/users");
+        return response.data;
+    } catch (error) {
+        throw error || new Error("An unknown error occurred while fetching users.");
+    }
+}
